@@ -6,7 +6,7 @@
 // @homepage      http://github.com/andrewnicols/userscripts-moodle
 // @namespace     http://userscripts.andrewrn.co.uk
 // @downloadURL   https://github.com/andrewnicols/userscripts-moodle/raw/master/tracker-jumper.user.js
-// @version       0.1
+// @version       0.2
 // ==/UserScript==
 
 var description = document.getElementById('descriptionmodule');
@@ -16,24 +16,40 @@ if (!description) {
 }
 
 var interestingrows = {
-  testing = {
-    'id'    : 'rowForcustomfield_10117',
-    'title' : 'Testing Instructions'
+  'top' : {
+    'id'    : 'details-module',
+    'title' : 'Details'
   },
-  difficulty = {
-    'id'    : 'rowForcustomfield_10051',
-    'title' : 'Difficulty'
-  }
+  'description' : {
+    'id'    : 'descriptionmodule',
+    'title' : 'Description'
+  },
+  'links' : {
+    'id'    : 'linkingmodule',
+    'title' : 'Links'
+  },
+  'activity' : {
+    'id'    : 'activitymodule',
+    'title' : 'Activity'
+  },
 };
 
-var s = '<ul>';
+var s = '';
 for (var key in interestingrows) {
   var obj = interestingrows[key];
-  s += '<li><a href="#' + obj.id + '">' + obj.title + '</a></li>';
+  s += '<li><a href="#" onClick="if(thiselement = document.getElementById(\'' + obj.id + '\')) {window.scrollTo(0, (thiselement.offsetTop + 90)); return false;}">' + obj.title + '</a></li>';
 }
+
+// Prepare List
+var menuul = document.createElement('ul');
+menuul.innerHTML = s;
+menuul.setAttribute('style', 'list-style: none; padding-left: 0px; margin: 5px');
 
 // prepare div
 var menudiv = document.createElement('div');
-menudiv.innerHTML = s;
-menudiv.setAttribute('style', 'border-top: 1px solid #DDD;');
-parent.insertBefore(menudiv, document.getElementById('tabCellPane1'));
+menudiv.appendChild(menuul);
+menudiv.setAttribute('style', 'border: 1px solid #eee; right: 0px; position: absolute; display: block; width: 200px; padding: 3px; background-color: #ddd; z-index: 100');
+
+var parent = document.getElementById('stalker');
+var divs = parent.getElementsByTagName('div');
+parent.insertBefore(menudiv, divs[0]);
